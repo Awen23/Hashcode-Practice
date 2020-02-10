@@ -12,7 +12,9 @@ for x in range(0, numRides):
 
 rides2 = rides.copy()
 
-vehicles = [[0, 0, 0, i] for i in range(numVehicles)]
+vehicles = [[0,0,0,i] for i in range(numVehicles)]
+
+rides.sort(key=lambda x : x[4])
 
 def dist(x1,y1,x2,y2):
 	return abs(x1-x2) + abs(y1 - y2)
@@ -21,43 +23,26 @@ def out():
 	for o in output:
 		print(len(o), *o)
 
+percentage = 0.5
+numCheck = 0.5 * len(rides)
 while rides:
 	time, carX, carY, vehI = hq.heappop(vehicles)
-	for i in range(len(rides)):
+
+	if len(rides) < numCheck:
+		numCheck = len(rides)
+	
+	scores = []
+	for i in range(numCheck):
 		ride = rides[i]
 		a, b, x, y, s, f, rideI = ride
+		
 		potentialEnd = time + dist(a, b, carX, carY) + dist(a, b, x, y)
 		if f > potentialEnd:
-			endTime = potentialEnd
-			endI = i
-			break
+			score = bonus + dist(a,b,x,y) - 2(dist(a, b, carX, carY)) - (s - (dist(a,b,x,y) + time))
+			scores.append([score, i])
 	hq.heappush(vehicles, [endTime, x, y, vehI])
 	rides.pop(endI) # remove from list
 	output[vehI].append(rideI)
 
-
-def score():
-	score = 0
-	for ride in output:
-		print(ride)
-		time = x1 = y1 = 0
-		for i in range(len(ride)):
-			x2 = rides2[ride[i]][0]
-			y2 = rides2[ride[i]][1]
-			time+= dist(x1,y1,x2,y2)
-			x1 = x2
-			y1 = y2
-			if time == rides2[ride[i]][4]:
-				score+=bonus
-			x2 = rides2[ride[i]][2]
-			y2 = rides2[ride[i]][3]
-			time += dist(x1,y1,x2,y2)
-			if time < rides2[ride[i]][5]:
-				score += dist(x1,y1,x2,y2)
-			x1 = x2
-			y1 = y2
-	print(score)
-
 out()
-output = [[0],[2,1]]
-score()
+
