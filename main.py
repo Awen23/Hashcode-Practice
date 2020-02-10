@@ -22,9 +22,10 @@ def out():
 	for o in output:
 		print(len(o), *o)
 
-while rides:
+while rides and vehicles:
 	time, carX, carY, vehI = hq.heappop(vehicles)
 	for i in range(len(rides)):
+		endI = -1
 		ride = rides[i]
 		a, b, x, y, s, f, rideI = ride
 		potentialEnd = time + dist(a, b, carX, carY) + dist(a, b, x, y)
@@ -32,10 +33,11 @@ while rides:
 			endTime = potentialEnd
 			endI = i
 			break
-	hq.heappush(vehicles, [endTime, x, y, vehI])
-	rides.pop(endI) # remove from list
-	print(rideI)
-	output[vehI].append(rideI)
+	if endI != -1:
+    
+		hq.heappush(vehicles, [endTime, x, y, vehI])
+		output[vehI].append(rideI)
+		rides.pop(endI) # remove from list
 
 
 def score():
